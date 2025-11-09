@@ -33,9 +33,13 @@ El proyecto utiliza una base de datos Oracle; por lo tanto, debes definir las va
 export BD_URL="jdbc:oracle:thin:@//<host>:<puerto>/<service_name>"
 export BD_USER="usuario"
 export BD_PASSWORD="contraseña"
+# Solo requerido si la conexión utiliza Oracle Wallet
+export WALLET_B64="$(base64 -w0 wallet.zip)"
 ```
 
 Estas variables son consumidas en `src/main/resources/application.yml` para configurar el `datasource` y las propiedades de Hibernate.
+
+`WALLET_B64` es opcional y únicamente debe proporcionarse cuando la base de datos requiere un Oracle Wallet para autenticarse. Su valor debe contener el archivo ZIP del wallet codificado en Base64, tal como se muestra en el ejemplo anterior. Si no necesitas wallet, puedes omitir la variable y la aplicación se conectará utilizando únicamente las credenciales.
 
 ## Ejecución local
 1. Clona el repositorio y accede a la carpeta del proyecto.
@@ -115,6 +119,8 @@ docker run -d \
   -e BD_URL="jdbc:oracle:thin:@//<host>:<puerto>/<service_name>" \
   -e BD_USER="usuario" \
   -e BD_PASSWORD="contraseña" \
+  # Opcional: solo si requieres wallet codificado en Base64
+  -e WALLET_B64="$(base64 -w0 wallet.zip)" \
   --name backend-levelup levelup/backend
 ```
 
