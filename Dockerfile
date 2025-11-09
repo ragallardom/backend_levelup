@@ -16,10 +16,14 @@ RUN mvn -B -ntp clean package -DskipTests
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
+# script de arranque
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Expose the default Spring Boot port
 EXPOSE 8080
 
 # Copy the built jar from the builder stage
 COPY --from=builder /app/target/*.jar /app/app.jar
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["/app/start.sh"]
