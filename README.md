@@ -37,13 +37,15 @@ export BD_URL="<descriptor>"
 
 export BD_USER="usuario"
 export BD_PASSWORD="contraseña"
-# Solo requerido si la conexión utiliza Oracle Wallet
-export WALLET_B64="$(base64 -w0 wallet.zip)"
+
+# Opcional: define la ruta donde se montará el Oracle Wallet.
+# De manera predeterminada la imagen apunta a /oracle/wallet
+export TNS_ADMIN="/oracle/wallet"
 ```
 
 Usa el descriptor que corresponda al modo en que tu instancia Oracle publica la conexión (SID dedicado vs. service-name). Estas variables son consumidas en `src/main/resources/application.yml` para configurar el `datasource` y las propiedades de Hibernate.
 
-`WALLET_B64` es opcional y únicamente debe proporcionarse cuando la base de datos requiere un Oracle Wallet para autenticarse. Su valor debe contener el archivo ZIP del wallet codificado en Base64, tal como se muestra en el ejemplo anterior. Si no necesitas wallet, puedes omitir la variable y la aplicación se conectará utilizando únicamente las credenciales.
+`TNS_ADMIN` es opcional y solo debe configurarse si deseas que la aplicación lea un Oracle Wallet desde un directorio específico. Si no necesitas wallet, puedes omitir la variable y la aplicación se conectará utilizando únicamente las credenciales.
 
 ## Ejecución local
 1. Clona el repositorio y accede a la carpeta del proyecto.
@@ -126,10 +128,11 @@ docker run -d \
   -e BD_URL="<descriptor>" \
   -e BD_USER="usuario" \
   -e BD_PASSWORD="contraseña" \
-  # Opcional: solo si requieres wallet codificado en Base64
-  -e WALLET_B64="$(base64 -w0 wallet.zip)" \
+  -v /oracle/wallet:/oracle/wallet:ro \
   --name backend-levelup levelup/backend
 ```
+
+Si necesitas exponer otro puerto diferente a `8080`, establece la variable `SERVER_PORT` antes de arrancar el contenedor para que Spring Boot utilice ese valor.
 
 ## Configuración de secretos para publicar imágenes
 Para que el workflow de GitHub Actions pueda autenticar y publicar imágenes en Docker Hub, es necesario configurar los siguientes secretos en los ajustes del repositorio en GitHub:
