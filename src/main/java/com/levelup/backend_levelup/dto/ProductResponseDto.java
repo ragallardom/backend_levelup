@@ -1,6 +1,5 @@
 package com.levelup.backend_levelup.dto;
 
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +17,7 @@ public class ProductResponseDto {
     private String code;
     private String name;
     private String description;
-    private BigDecimal price;
+    private Integer price;
     private String imagePath;
     private Integer stock;
 }

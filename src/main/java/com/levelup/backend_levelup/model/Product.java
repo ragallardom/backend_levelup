@@ -8,12 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -54,9 +52,9 @@ public class Product {
     private String description;
 
     @NotNull
-    @DecimalMin(value = "0.0")
-    @Column(name = "price", nullable = false, precision = 19, scale = 2)
-    private BigDecimal price;
+    @PositiveOrZero
+    @Column(name = "price", nullable = false)
+    private Integer price;
 
     @Size(max = 512)
     @Column(name = "image_path", length = 512)

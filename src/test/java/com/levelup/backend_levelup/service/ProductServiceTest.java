@@ -11,7 +11,6 @@ import com.levelup.backend_levelup.dto.ProductRequestDto;
 import com.levelup.backend_levelup.dto.ProductResponseDto;
 import com.levelup.backend_levelup.model.Product;
 import com.levelup.backend_levelup.repository.ProductRepository;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +41,7 @@ class ProductServiceTest {
                 .code("PRD-001")
                 .name("Test Product")
                 .description("Description")
-                .price(BigDecimal.valueOf(9.99))
+                .price(9990)
                 .imagePath("/images/test.png")
                 .stock(10)
                 .build();
@@ -56,7 +55,7 @@ class ProductServiceTest {
         assertThat(responseDto.getCode()).isEqualTo(product.getCode());
         assertThat(responseDto.getName()).isEqualTo(product.getName());
         assertThat(responseDto.getDescription()).isEqualTo(product.getDescription());
-        assertThat(responseDto.getPrice()).isEqualByComparingTo(product.getPrice());
+        assertThat(responseDto.getPrice()).isEqualTo(product.getPrice());
         assertThat(responseDto.getImagePath()).isEqualTo(product.getImagePath());
         assertThat(responseDto.getStock()).isEqualTo(product.getStock());
     }
@@ -67,7 +66,7 @@ class ProductServiceTest {
                 .code("PRD-002")
                 .name("Another Product")
                 .description("Another Description")
-                .price(BigDecimal.valueOf(19.99))
+                .price(19990)
                 .imagePath("/images/another.png")
                 .stock(5)
                 .build();
@@ -91,7 +90,7 @@ class ProductServiceTest {
         assertThat(responseDto.getCode()).isEqualTo(savedProduct.getCode());
         assertThat(responseDto.getName()).isEqualTo(savedProduct.getName());
         assertThat(responseDto.getDescription()).isEqualTo(savedProduct.getDescription());
-        assertThat(responseDto.getPrice()).isEqualByComparingTo(savedProduct.getPrice());
+        assertThat(responseDto.getPrice()).isEqualTo(savedProduct.getPrice());
         assertThat(responseDto.getImagePath()).isEqualTo(savedProduct.getImagePath());
         assertThat(responseDto.getStock()).isEqualTo(savedProduct.getStock());
 
@@ -104,7 +103,7 @@ class ProductServiceTest {
                 .code("PRD-003")
                 .name("Existing Product")
                 .description("Existing Description")
-                .price(BigDecimal.valueOf(29.99))
+                .price(29990)
                 .imagePath("/images/existing.png")
                 .stock(8)
                 .build();
