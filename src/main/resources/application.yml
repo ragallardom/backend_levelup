@@ -3,6 +3,7 @@ spring:
     name: backend_levelup
 
   datasource:
+    # BD_URL debe incluir el descriptor JDBC completo (SID o service-name)
     url: ${BD_URL}
     username: ${BD_USER}
     password: ${BD_PASSWORD}
