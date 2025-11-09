@@ -1,3 +1,5 @@
+#!/bin/sh
+
 set -e
 
 if [ -n "${WALLET_B64:-}" ]; then
