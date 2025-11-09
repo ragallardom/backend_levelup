@@ -7,6 +7,9 @@ target/
 ### Maven ###
 .mvn
 
+### Oracle ###
+oracle
+
 ### STS ###
 .apt_generated
 .classpath
