@@ -3,10 +3,9 @@ spring:
     name: backend_levelup
 
   datasource:
-    # BD_URL debe incluir el descriptor JDBC completo (SID o service-name)
-    url: ${BD_URL}
-    username: ${BD_USER}
-    password: ${BD_PASSWORD}
+    url: jdbc:oracle:thin:@jokuhv2vm15s47bc_high?TNS_ADMIN=C:/Users/ragal/IdeaProjects/backend_levelup/oracle/wallet
+    username: levelup_user
+    password: +a1{3MFG*E2789G
     driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:
