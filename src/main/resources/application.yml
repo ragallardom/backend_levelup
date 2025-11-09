@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: backend_levelup
+
+  datasource:
+    url: ${BD_URL}
+    username: ${BD_USER}
+    password: ${BD_PASSWORD}
+    driver-class-name: oracle.jdbc.OracleDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
