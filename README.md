@@ -30,14 +30,18 @@ Asegúrate de contar con las siguientes herramientas instaladas:
 El proyecto utiliza una base de datos Oracle; por lo tanto, debes definir las variables de entorno antes de iniciar la aplicación:
 
 ```bash
-export BD_URL="jdbc:oracle:thin:@//<host>:<puerto>/<service_name>"
+# Define BD_URL usando uno de los dos formatos válidos:
+#   SID dedicado: jdbc:oracle:thin:@<host>:<puerto>:<sid>
+#   Service-name: jdbc:oracle:thin:@//<host>:<puerto>/<service_name>
+export BD_URL="<descriptor>"
+
 export BD_USER="usuario"
 export BD_PASSWORD="contraseña"
 # Solo requerido si la conexión utiliza Oracle Wallet
 export WALLET_B64="$(base64 -w0 wallet.zip)"
 ```
 
-Estas variables son consumidas en `src/main/resources/application.yml` para configurar el `datasource` y las propiedades de Hibernate.
+Usa el descriptor que corresponda al modo en que tu instancia Oracle publica la conexión (SID dedicado vs. service-name). Estas variables son consumidas en `src/main/resources/application.yml` para configurar el `datasource` y las propiedades de Hibernate.
 
 `WALLET_B64` es opcional y únicamente debe proporcionarse cuando la base de datos requiere un Oracle Wallet para autenticarse. Su valor debe contener el archivo ZIP del wallet codificado en Base64, tal como se muestra en el ejemplo anterior. Si no necesitas wallet, puedes omitir la variable y la aplicación se conectará utilizando únicamente las credenciales.
 
@@ -116,7 +120,10 @@ Para ejecutar el contenedor exponiendo el puerto 8080 y pasando las variables de
 ```bash
 docker run -d \
   -p 8080:8080 \
-  -e BD_URL="jdbc:oracle:thin:@//<host>:<puerto>/<service_name>" \
+  # Reemplaza <descriptor> por el formato que use tu instancia:
+  #   SID: jdbc:oracle:thin:@<host>:<puerto>:<sid>
+  #   Service-name: jdbc:oracle:thin:@//<host>:<puerto>/<service_name>
+  -e BD_URL="<descriptor>" \
   -e BD_USER="usuario" \
   -e BD_PASSWORD="contraseña" \
   # Opcional: solo si requieres wallet codificado en Base64
