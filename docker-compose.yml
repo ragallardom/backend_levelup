@@ -1,0 +1,25 @@
+services:
+  backend:
+    image: ragallardom/backend-levelup:latest   # ajusta si tu repo en Docker Hub es otro
+    container_name: backend-levelup
+    restart: unless-stopped
+    ports:
+      - "8080:8080"            # cambia a "80:8080" si quieres servir en el puerto 80
+    environment:
+      BD_URL: "${BD_URL}"
+      BD_USER: "${BD_USER}"
+      BD_PASSWORD: "${BD_PASSWORD}"
+      # Si usas wallet, Spring leerá TNS_ADMIN
+      #TNS_ADMIN: "/oracle/wallet"
+      # SERVER_PORT: "8080"      # descomenta si quieres forzar otro puerto interno
+    volumes:
+      - /opt/wallet:/oracle/wallet:ro
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    # Vigila y actualiza automáticamente 'backend' cuando haya nueva imagen en Docker Hub
+    command: --cleanup --include-restarting --interval 300 backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
