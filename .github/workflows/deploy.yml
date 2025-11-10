@@ -36,8 +36,8 @@ jobs:
 
             # 3) Desplegar con docker compose
             # Si necesitas sudo para docker, antepone 'sudo ' a los comandos siguientes
-            docker compose pull
-            docker compose up -d
+            sudo docker compose pull
+            sudo docker compose up -d
 
             # 4) (Opcional) limpiar
-            docker system prune -f --volumes || true
+            sudo docker system prune -f --volumes || true
