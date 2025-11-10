@@ -11,6 +11,7 @@ API REST construida con Spring Boot 3 para gestionar productos de LevelUp. Expon
 - [Estrategia de pruebas](#estrategia-de-pruebas)
 - [Construcción y despliegue con Docker](#construcción-y-despliegue-con-docker)
 - [Configuración de secretos para publicar imágenes](#configuración-de-secretos-para-publicar-imágenes)
+- [Publicación automatizada en Docker Hub](#publicación-automatizada-en-docker-hub)
 
 ## Tecnologías
 - Java 21
@@ -141,3 +142,15 @@ Para que el workflow de GitHub Actions pueda autenticar y publicar imágenes en 
 - `DOCKERHUB_TOKEN`: token de acceso o contraseña de Docker Hub con permisos para publicar en el repositorio correspondiente.
 
 Una vez configurados, el workflow utilizará estos secretos para iniciar sesión y publicar las imágenes etiquetadas como `latest` y con el SHA del commit.
+
+## Publicación automatizada en Docker Hub
+El repositorio incluye un workflow de GitHub Actions en `.github/workflows/build-and-publish.yml` que automatiza la creación y publicación de la imagen Docker del proyecto. El flujo se activa automáticamente al hacer `push` en la rama `main` y también puede ejecutarse manualmente mediante la opción **Run workflow** (`workflow_dispatch`).
+
+El job realiza las siguientes tareas:
+
+1. Clona el repositorio usando `actions/checkout@v4`.
+2. Compila el proyecto con `./mvnw -B clean package` para asegurar que el artefacto se genere correctamente.
+3. Inicia sesión en Docker Hub mediante `docker/login-action@v3` utilizando los secretos `DOCKERHUB_USERNAME` y `DOCKERHUB_TOKEN` configurados previamente.
+4. Construye y publica la imagen con `docker/build-push-action@v5`, apuntando al `Dockerfile` de la raíz del repositorio y subiendo las etiquetas `ragallardom/backend-levelup:latest` y `ragallardom/backend-levelup:<SHA del commit>`.
+
+Con esta configuración, cada cambio fusionado en `main` queda disponible automáticamente en Docker Hub con una etiqueta fija (`latest`) y otra inmutable que permite identificar exactamente el commit (`ragallardom/backend-levelup:<sha>`). Para lanzar la publicación manualmente (por ejemplo, tras un hotfix), dirígete a la pestaña **Actions**, selecciona _Build and Publish Docker image_ y pulsa en **Run workflow**.
