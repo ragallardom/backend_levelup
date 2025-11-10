@@ -7,6 +7,10 @@ target/
 ### Maven ###
 .mvn
 
+github_deploy
+github_deploy.pub
+.env
+
 ### STS ###
 .apt_generated
 .classpath
