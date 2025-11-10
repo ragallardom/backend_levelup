@@ -15,7 +15,7 @@ public class GreetingController {
         this.greetingService = greetingService;
     }
 
-    @GetMapping("/hola")
+    @GetMapping("/holas")
     public String holaMundo() {
         return greetingService.getGreeting();
     }
