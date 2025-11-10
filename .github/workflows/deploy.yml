@@ -1,26 +1,43 @@
-name: Deploy via SSH (passphrase)
+name: Deploy - SSH
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          port: ${{ secrets.SSH_PORT || 22 }}
+          # Si tu clave tiene passphrase, descomenta la siguiente línea:
+          # passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script_stop: true
           script: |
+            set -e
+
+            # 1) Preparar carpeta
+            mkdir -p /opt/backend-levelup
             cd /opt/backend-levelup
-            git pull --rebase
-            docker compose pull && docker compose up -d
+
+            # 2) Obtener repo (clonar si no existe, actualizar si existe)
+            if [ ! -d .git ]; then
+              git clone --depth=1 https://github.com/ragallardom/backend_levelup.git .
+            else
+              git fetch --all
+              # ajusta la rama si no es main
+              git reset --hard origin/main
+            fi
+
+            # 3) Desplegar con docker compose
+            # Si necesitas sudo para docker, antepone 'sudo ' a los comandos siguientes
+            docker compose pull
+            docker compose up -d
+
+            # 4) (Opcional) limpiar
+            docker system prune -f --volumes || true
