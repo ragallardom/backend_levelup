@@ -1,7 +1,6 @@
 services:
   backend:
     image: ragallardom/backend-levelup:latest   # ajusta si tu repo en Docker Hub es otro
-    container_name: backend-levelup
     restart: unless-stopped
     ports:
       - "8080:8080"            # cambia a "80:8080" si quieres servir en el puerto 80
@@ -17,7 +16,6 @@ services:
 
   watchtower:
     image: containrrr/watchtower
-    container_name: watchtower
     restart: unless-stopped
     # Vigila y actualiza automáticamente 'backend' cuando haya nueva imagen en Docker Hub
     command: --cleanup --include-restarting --interval 300 backend
