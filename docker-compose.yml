@@ -9,7 +9,7 @@ services:
       BD_USER: "${BD_USER}"
       BD_PASSWORD: "${BD_PASSWORD}"
       # Si usas wallet, Spring leerá TNS_ADMIN
-      #TNS_ADMIN: "/oracle/wallet"
+      TNS_ADMIN: "/opt/wallet"
       # SERVER_PORT: "8080"      # descomenta si quieres forzar otro puerto interno
     volumes:
       - /opt/wallet:/oracle/wallet:ro
