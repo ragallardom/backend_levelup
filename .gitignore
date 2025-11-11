@@ -10,6 +10,7 @@ target/
 github_deploy
 github_deploy.pub
 .env
+!/opt/backend-levelup/.env
 
 ### STS ###
 .apt_generated
