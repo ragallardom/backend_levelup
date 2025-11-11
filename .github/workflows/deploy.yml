@@ -46,10 +46,10 @@ jobs:
             fi
 
             cat > .env <<EOF
-BD_URL="${BD_URL}"
-BD_USER="${BD_USER}"
-BD_PASSWORD="${BD_PASSWORD}"
-EOF
+            BD_URL="${BD_URL}"
+            BD_USER="${BD_USER}"
+            BD_PASSWORD="${BD_PASSWORD}"
+            EOF
 
             set -a
             source .env
