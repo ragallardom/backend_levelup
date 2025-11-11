@@ -34,11 +34,21 @@ jobs:
               git reset --hard origin/main
             fi
 
-            # 3) Desplegar con docker compose
+            # 3) Cargar variables sensibles desde .env
+            if [ ! -f .env ]; then
+              echo "No se encontró /opt/backend-levelup/.env. Crea el archivo antes de ejecutar el despliegue." >&2
+              exit 1
+            fi
+
+            set -a
+            source .env
+            set +a
+
+            # 4) Desplegar con docker compose
             # Si necesitas sudo para docker, antepone 'sudo ' a los comandos siguientes
             sudo docker compose down --remove-orphans
             sudo docker compose pull
             sudo docker compose up -d
 
-            # 4) (Opcional) limpiar
+            # 5) (Opcional) limpiar
             sudo docker system prune -f --volumes || true
