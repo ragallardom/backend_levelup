@@ -4,9 +4,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### Maven ###
-.mvn
-
 github_deploy
 github_deploy.pub
 .env
