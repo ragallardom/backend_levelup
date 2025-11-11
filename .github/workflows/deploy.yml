@@ -7,6 +7,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      BD_URL: ${{ secrets.BD_URL }}
+      BD_USER: ${{ secrets.BD_USER }}
+      BD_PASSWORD: ${{ secrets.BD_PASSWORD }}
     steps:
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.1.0
@@ -18,6 +22,7 @@ jobs:
           # Si tu clave tiene passphrase, descomenta la siguiente línea:
           # passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script_stop: true
+          envs: BD_URL,BD_USER,BD_PASSWORD
           script: |
             set -e
 
@@ -34,11 +39,17 @@ jobs:
               git reset --hard origin/main
             fi
 
-            # 3) Cargar variables sensibles desde .env
-            if [ ! -f .env ]; then
-              echo "No se encontró /opt/backend-levelup/.env. Crea el archivo antes de ejecutar el despliegue." >&2
+            # 3) Preparar variables sensibles
+            if [ -z "${BD_URL}" ] || [ -z "${BD_USER}" ] || [ -z "${BD_PASSWORD}" ]; then
+              echo "Faltan variables BD_URL, BD_USER o BD_PASSWORD. Verifica los secretos configurados en el repositorio." >&2
               exit 1
             fi
+
+            cat > .env <<EOF
+BD_URL="${BD_URL}"
+BD_USER="${BD_USER}"
+BD_PASSWORD="${BD_PASSWORD}"
+EOF
 
             set -a
             source .env
