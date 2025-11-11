@@ -28,7 +28,7 @@ Asegúrate de contar con las siguientes herramientas instaladas:
 - Docker Engine 24+ si deseas construir y ejecutar la imagen del servicio.
 
 ## Variables de entorno
-El proyecto utiliza una base de datos Oracle; por lo tanto, debes definir las variables de entorno antes de iniciar la aplicación:
+El proyecto utiliza una base de datos Oracle; por lo tanto, debes definir las variables de entorno antes de iniciar la aplicación. Puedes exportarlas manualmente o almacenarlas en un archivo `.env`.
 
 ```bash
 # Define BD_URL usando uno de los dos formatos válidos:
@@ -42,11 +42,45 @@ export BD_PASSWORD="contraseña"
 # Opcional: define la ruta donde se montará el Oracle Wallet.
 # De manera predeterminada la imagen apunta a /oracle/wallet
 export TNS_ADMIN="/oracle/wallet"
+
+# Opcional: personaliza el puerto del servicio Spring Boot.
+export SERVER_PORT="8080"
 ```
 
 Usa el descriptor que corresponda al modo en que tu instancia Oracle publica la conexión (SID dedicado vs. service-name). Estas variables son consumidas en `src/main/resources/application.yml` para configurar el `datasource` y las propiedades de Hibernate.
 
 `TNS_ADMIN` es opcional y solo debe configurarse si deseas que la aplicación lea un Oracle Wallet desde un directorio específico. Si no necesitas wallet, puedes omitir la variable y la aplicación se conectará utilizando únicamente las credenciales.
+
+### Archivo `.env` para despliegues automatizados
+
+El workflow de despliegue remoto espera encontrar un archivo `/opt/backend-levelup/.env` en la máquina destino. La carpeta se crea automáticamente durante el job, pero tú debes generar el archivo con las credenciales correctas:
+
+```bash
+sudo mkdir -p /opt/backend-levelup
+sudo tee /opt/backend-levelup/.env >/dev/null <<'EOF'
+BD_URL=jdbc:oracle:thin:@//db-host:1521/LEVELUP
+BD_USER=levelup_app
+BD_PASSWORD=contraseña-super-secreta
+# Opcional: apunta al directorio del Oracle Wallet si aplica
+TNS_ADMIN=/oracle/wallet
+# Opcional: reemplaza si necesitas exponer otro puerto
+SERVER_PORT=8080
+EOF
+
+sudo chmod 600 /opt/backend-levelup/.env
+sudo chown <usuario-deploy>:<grupo> /opt/backend-levelup/.env
+```
+
+> **Importante:** el archivo vive fuera del repositorio y nunca debe versionarse. GitHub Actions se conectará por SSH, leerá el `.env` y exportará las variables antes de ejecutar `docker compose`.
+
+#### Rotación segura de credenciales
+
+1. Edita el archivo `/opt/backend-levelup/.env` con los nuevos valores (`sudo nano /opt/backend-levelup/.env` o una herramienta similar).
+2. Guarda los cambios y verifica los permisos (`chmod 600`) para evitar accesos no autorizados.
+3. Ejecuta nuevamente el workflow de despliegue (o lanza `docker compose` manualmente) para que los contenedores reciban las nuevas credenciales.
+4. Revoca las credenciales antiguas en la base de datos para completar la rotación.
+
+Este procedimiento evita exponer secretos en Git y mantiene el servidor siempre alineado con los valores vigentes.
 
 ## Ejecución local
 1. Clona el repositorio y accede a la carpeta del proyecto.
