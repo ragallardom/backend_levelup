@@ -9,6 +9,11 @@ github_deploy.pub
 .env
 !/opt/backend-levelup/.env
 
+gha_deploy
+gha_deploy.pub
+hola
+hola.pub
+
 ### STS ###
 .apt_generated
 .classpath
