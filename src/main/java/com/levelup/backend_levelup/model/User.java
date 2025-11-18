@@ -1,5 +1,6 @@
 package com.levelup.backend_levelup.model;
 
+import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,10 +19,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,10 +48,6 @@ public class User implements UserDetails {
     @Column(name = "username", nullable = false, unique = true, length = 100)
     private String username;
 
-    @NotBlank
-    @Size(max = 255)
-    @Column(name = "password", nullable = false, length = 255)
-    private String password; // Ver nota de seguridad al final
 
     @NotBlank
     @Email
@@ -64,19 +63,29 @@ public class User implements UserDetails {
     @Column(name = "last_name", length = 100)
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role", nullable = false)
+    private Role role;
+
+
+    @NotBlank
+    @Size(max = 255)
+    @Column(name = "firebase_uid", nullable = false, unique = true, length = 255)
+    private String firebaseUid;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
     public String getPassword() {
-        return password; // (Ya tenías este campo)
+        return null; // O ""
     }
 
     @Override
     public String getUsername() {
-        return username; // (Ya tenías este campo)
+        return firebaseUid;
     }
 
     @Override
@@ -98,4 +107,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }
