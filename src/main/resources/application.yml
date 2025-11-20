@@ -18,7 +18,7 @@ spring:
 
   firebase:
     config:
-      path: ${FIREBASE_CONFIG_PATH:classpath:firebase-service-account.json}
+      path: ${/app/secrets/firebase-key.json:classpath:firebase-service-account.json}
 
 application:
   security:
