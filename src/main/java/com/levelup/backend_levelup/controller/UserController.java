@@ -1,27 +1,18 @@
 package com.levelup.backend_levelup.controller;
 
-import com.levelup.backend_levelup.dto.UserRequestDto;
 import com.levelup.backend_levelup.dto.UserResponseDto;
 import com.levelup.backend_levelup.service.UserService;
-import jakarta.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.levelup.backend_levelup.model.Role;
 import com.levelup.backend_levelup.model.User;
 import com.levelup.backend_levelup.repository.UserRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
@@ -55,25 +46,26 @@ public class UserController {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
             String uid = decodedToken.getUid();
             String email = decodedToken.getEmail();
+            String name = decodedToken.getName();
 
             if (!userRepository.existsByFirebaseUid(uid)) {
 
                 User newUser = User.builder()
                         .firebaseUid(uid)
                         .email(email)
-                        .firstName(decodedToken.getName())
-                        .lastName("") // O dejarlo nulo
-                        .role(Role.USER) // Rol por defecto
+                        .firstName(name != null ? name : "Usuario")
+                        .lastName("Firebase")
+                        .role(Role.USER)
                         .build();
 
                 userRepository.save(newUser);
                 return ResponseEntity.ok("Usuario sincronizado exitosamente.");
             }
-
             return ResponseEntity.ok("El usuario ya estaba sincronizado.");
 
         } catch (Exception e) {
-            return ResponseEntity.status(401).body("Error al validar token: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
 
