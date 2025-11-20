@@ -45,7 +45,7 @@ public class User implements UserDetails {
 
     @NotBlank
     @Size(max = 100)
-    @Column(name = "username", nullable = false, unique = true, length = 100)
+    @Column(name = "username", nullable = true, unique = true, length = 100)
     private String username;
 
 
