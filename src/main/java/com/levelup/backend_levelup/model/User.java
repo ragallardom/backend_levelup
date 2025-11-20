@@ -38,22 +38,20 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
     @SequenceGenerator(name = "users_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
     private Long id;
-
-    @NotBlank
-    @Size(max = 100)
-    @Column(name = "username", nullable = true, unique = true, length = 100)
-    private String username;
-
 
     @NotBlank
     @Email
     @Size(max = 255)
     @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
+
+    @NotBlank
+    @Size(max = 255)
+    @Column(name = "firebase_uid", nullable = false, unique = true, length = 255)
+    private String firebaseUid;
 
     @Size(max = 100)
     @Column(name = "first_name", length = 100)
@@ -68,11 +66,6 @@ public class User implements UserDetails {
     private Role role;
 
 
-    @NotBlank
-    @Size(max = 255)
-    @Column(name = "firebase_uid", nullable = false, unique = true, length = 255)
-    private String firebaseUid;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -80,33 +73,20 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null; // O ""
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return firebaseUid;
+        return email;
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
+    public boolean isAccountNonExpired() { return true; }
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
+    public boolean isAccountNonLocked() { return true; }
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
+    public boolean isCredentialsNonExpired() { return true; }
     @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-
+    public boolean isEnabled() { return true; }
 }
