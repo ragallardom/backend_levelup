@@ -56,6 +56,9 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Integer price;
 
+    @Lob
+    @Column(name = "image_data")
+    private byte[] imageData;
 
     @NotNull
     @PositiveOrZero

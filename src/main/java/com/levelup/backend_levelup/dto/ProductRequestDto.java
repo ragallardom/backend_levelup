@@ -4,12 +4,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import lombok.*;
+import lombok.Data;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class ProductRequestDto {
 
     @NotBlank
@@ -26,6 +29,7 @@ public class ProductRequestDto {
     @PositiveOrZero
     private Integer price;
 
+    private String imageBase64;
 
     @NotNull
     @PositiveOrZero
