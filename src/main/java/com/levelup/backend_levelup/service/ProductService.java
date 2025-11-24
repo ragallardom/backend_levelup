@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-import org.springframework.data.domain.Sort;
 
 @Service
 public class ProductService {
@@ -24,7 +23,6 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProducts() {
-        return productRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
     }
@@ -46,20 +44,11 @@ public class ProductService {
                 .stock(requestDto.getStock())
                 .build();
 
-        if (requestDto.getImageBase64() != null && !requestDto.getImageBase64().isEmpty()) {
-            byte[] imageBytes = java.util.Base64.getDecoder().decode(requestDto.getImageBase64());
-            product.setImageData(imageBytes);
-        }
-
         Product savedProduct = productRepository.save(product);
         return mapToResponseDto(savedProduct);
     }
 
     private ProductResponseDto mapToResponseDto(Product product) {
-        String base64Image = null;
-        if (product.getImageData() != null) {
-            base64Image = java.util.Base64.getEncoder().encodeToString(product.getImageData());
-        }
         return ProductResponseDto.builder()
                 .id(product.getId())
                 .code(product.getCode())
@@ -67,9 +56,6 @@ public class ProductService {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .stock(product.getStock())
-                .imageBase64(base64Image)
                 .build();
-
-
     }
 }
