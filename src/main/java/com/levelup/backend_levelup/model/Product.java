@@ -56,9 +56,9 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @Size(max = 512)
-    @Column(name = "image_path", length = 512)
-    private String imagePath;
+    @Lob
+    @Column(name = "image_data")
+    private byte[] imageData;
 
     @NotNull
     @PositiveOrZero

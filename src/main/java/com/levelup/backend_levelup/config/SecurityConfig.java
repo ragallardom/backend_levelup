@@ -30,8 +30,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/users/sync").permitAll() // Para crear el usuario
+                        .requestMatchers("/api/v1/users/sync").permitAll()
                         .requestMatchers("/api/v1/products/**").permitAll()
+                        .requestMatchers("/api/v1/sales").permitAll()
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )

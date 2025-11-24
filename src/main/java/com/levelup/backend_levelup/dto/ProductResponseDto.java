@@ -18,6 +18,6 @@ public class ProductResponseDto {
     private String name;
     private String description;
     private Integer price;
-    private String imagePath;
+    private String imageBase64;
     private Integer stock;
 }
