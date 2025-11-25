@@ -34,4 +34,8 @@ public class ProductRequestDto {
     @NotNull
     @PositiveOrZero
     private Integer stock;
+
+    @NotBlank
+    private String category;
+
 }

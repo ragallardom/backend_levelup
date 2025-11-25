@@ -35,7 +35,7 @@ public class ProductService {
         if (existingProduct.isPresent()) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "el producto con este codigo ya existegit status: " + requestDto.getCode());
+                    "el producto con este codigo ya existe: " + requestDto.getCode());
         }
 
         Product product = Product.builder()
@@ -44,6 +44,7 @@ public class ProductService {
                 .description(requestDto.getDescription())
                 .price(requestDto.getPrice())
                 .stock(requestDto.getStock())
+                .category(requestDto.getCategory())
                 .build();
 
         if (requestDto.getImageBase64() != null && !requestDto.getImageBase64().isEmpty()) {
@@ -67,6 +68,7 @@ public class ProductService {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .stock(product.getStock())
+                .category(product.getCategory())
                 .imageBase64(base64Image)
                 .build();
 

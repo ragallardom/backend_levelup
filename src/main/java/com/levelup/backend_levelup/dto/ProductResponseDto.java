@@ -20,4 +20,5 @@ public class ProductResponseDto {
     private Integer price;
     private String imageBase64;
     private Integer stock;
+    private String category;
 }

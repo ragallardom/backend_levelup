@@ -64,4 +64,11 @@ public class Product {
     @PositiveOrZero
     @Column(name = "stock", nullable = false)
     private Integer stock;
+
+    @NotBlank
+    @Column(name = "category")
+    private String category;
+
+
 }
+
