@@ -74,4 +74,33 @@ public class ProductService {
 
 
     }
+    @Transactional
+    public ProductResponseDto updateProduct(Long id, ProductRequestDto requestDto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        product.setCode(requestDto.getCode());
+        product.setName(requestDto.getName());
+        product.setDescription(requestDto.getDescription());
+        product.setPrice(requestDto.getPrice());
+        product.setStock(requestDto.getStock());
+        product.setCategory(requestDto.getCategory());
+
+        if (requestDto.getImageBase64() != null && !requestDto.getImageBase64().isEmpty()) {
+            byte[] imageBytes = java.util.Base64.getDecoder().decode(requestDto.getImageBase64());
+            product.setImageData(imageBytes);
+        }
+
+        Product updatedProduct = productRepository.save(product);
+        return mapToResponseDto(updatedProduct);
+    }
+
+
+    @Transactional
+    public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new RuntimeException("Producto no encontrado");
+        }
+        productRepository.deleteById(id);
+    }
 }
