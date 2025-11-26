@@ -14,6 +14,9 @@ import com.levelup.backend_levelup.model.Role;
 import com.levelup.backend_levelup.model.User;
 import com.levelup.backend_levelup.repository.UserRepository;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -67,6 +70,14 @@ public class UserController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDto> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
 }
